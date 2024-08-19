@@ -1,0 +1,17 @@
+# 推荐小写 + 下划线，对于非英文更清晰
+env="sit"
+
+app.home="/app/xxx"
+app.log="/app/log"
+
+# 数据库的连接信息
+[mysql]
+ip='172.0.0.1'
+port='8080'
+scehma='gbhu'
+user='admin'
+passwd='admin'
+
+# 其他系统连接信息
+[sys_1]
+url="172.0.0.1/hello"
