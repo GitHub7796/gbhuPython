@@ -1,0 +1,9 @@
+[elasticSearch]
+ip="127.0.0.1"
+port="9002"
+es1.ip=""
+es1.port="9002"
+es2.ip=""
+es2.port="9002"
+es3.ip=""
+es3.port="9002"
