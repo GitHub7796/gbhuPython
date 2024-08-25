@@ -1,18 +1,56 @@
-from es_util import get_esconn
 import sys
-es_client=get_esconn()
+import importlib
+from loguru import logger
+from helper.mysql_helper import DBhelpher
+from config.config_project import PAGE_SIZE
+from helper.es_helper import ESHealper
+from decorators.log_decorators import log
 
-# 从数据库获取数据 并 转化成 action
-def get_actions():
+
+@log()
+def validate_arguments(args):
     pass
-# es 的逻辑，先删除索引、别名，然后添加索引、别名
-def main():
+
+
+@log()
+def import_index_moudle(argv):
+    es_config_moudle = importlib.import_module('db2es.'+argv[0])
+
+    return \
+            es_config_moudle.INDEX_ALIAS, \
+            es_config_moudle.INDEX_BODY, \
+            es_config_moudle.SQL
+
+
+def update_es_alias(index):
+    pass
+
+
+@log()
+def db2es(index, sql):
+    db_client = DBhelpher()
+    es_client = ESHealper()
+    while True:
+        # 获取数据
+        datas = db_client.fetch_many(sql, PAGE_SIZE)
+        logger.success("fetch_many")
+        if datas == ():
+            break
+        # 插入 es
+        # es_client.insert_data(index,datas)
+        break
+
+
+def main(argv):
     # 检验参数
-    # 获取参数
-    index=sys.args[1]
-    # 获取对应数据
-    actions=get_actions()
-    
-    # 查看索引是否存在
-    es_client.indices.exists()
-print(sys.args)
+    validate_arguments(argv)
+    # 动态导入模块
+    INDEX_ALIAS, INDEX_BODY, SQL = import_index_moudle(argv)
+    # 更新es
+    db2es(INDEX_ALIAS, SQL)
+    # 更新 alias
+    update_es_alias(INDEX_ALIAS)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

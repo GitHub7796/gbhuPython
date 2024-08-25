@@ -1,0 +1,1 @@
+python3 db2es.py app_user
